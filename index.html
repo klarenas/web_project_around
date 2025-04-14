@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alrededor de los EE.UU.</title>
+    <link rel="icon" type="image/png" href="./favicon_traveler.png">
+    <link rel="stylesheet" href="./vendor/normalize.css">
+    <link rel="stylesheet" href="./pages/index.css">
+</head>
+<body class="page">
+    <header class="header">
+        <h1 class="header__title">Alrededor <span class="header__subtitle">De E.U.</span></h1>
+    </header>
+
+    <main class="content">
+        <section class="profile">
+            <img src="./images/foto_karina.jpg" alt="Foto de perfil" class="profile__avatar">
+            <div class="profile__info">
+                <h2 class="profile__name">Karina G. Larenas</h2>
+                <button type="button" class="profile__edit-button"></button>
+                <p class="profile__about">Traveler</p>
+            </div>
+            <button type="button" class="profile__add-button"></button>
+        </section>
+
+        <section class="places" aria-label="Lugares de interés">
+            <ul class="places__list">
+            </ul>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p class="footer__copyright">&copy; 2025 Alrededor de E.U.</p>
+    </footer>
+
+    <div class="popup">
+        <div class="popup__container">
+            <button type="button" class="popup__close-button"></button>
+            <h3 class="popup__title">Editar perfil</h3>
+            <form class="popup__form" name="edit-profile">
+                <input type="text" name="name" class="popup__input popup__input_type_name" placeholder="Nombre">
+                <input type="text" name="about" class="popup__input popup__input_type_about" placeholder="Acerca de mí">
+                <button type="submit" class="popup__submit-button">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <template id="card-template">
+        <li class="card">
+            <img class="card__image" src="#" alt="">
+            <div class="card__content">
+                <h2 class="card__title"></h2>
+                <button type="button" class="card__like-button"></button>
+            </div>
+        </li>
+    </template>
+
+    <script src="./scripts/index.js"></script>
+</body>
+</html>

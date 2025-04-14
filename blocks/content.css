@@ -1,0 +1,22 @@
+.content {
+    display: block;
+    max-width: 880px;
+    margin: auto;
+    padding: 0 19px;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 880px) {
+    .content {
+        max-width: 880px;
+        padding: 0;
+    }
+}
+
+@media screen and (min-width: 614px) {
+    .content {
+        max-width: 520px;
+        padding: 0;
+    }
+}
+
