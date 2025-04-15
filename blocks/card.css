@@ -67,6 +67,18 @@
     }
 }
 
+@media screen and (max-width: 728px) {
+    .card {
+        width: 282px;
+    }
+
+    .card__image {
+        width: 282px;
+        height: 282px;
+        object-fit: cover;
+    }
+}
+
 @media screen and (max-width: 425px) {
     .card {
         width: 282px;
