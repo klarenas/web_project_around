@@ -17,7 +17,6 @@
 @media screen and (max-width: 880px) {
     .places {
         max-width: 700px;
-        margin: 0 auto;
     }
 
     .places__list {
@@ -28,22 +27,11 @@
     }
 }
 
-
 @media screen and (max-width: 728px) {
     .places {
         max-width: 600px;
-        margin: 0 auto;
     }
 
-    .places__list {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 21px 17px;
-        justify-content: center;
-        justify-items: center;
-    }
-}
-
-@media screen and (max-width: 614px) {
     .places__list {
         grid-template-columns: repeat(2, 1fr);
         gap: 21px 17px;

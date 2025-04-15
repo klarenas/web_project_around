@@ -55,11 +55,10 @@
     .card__image {
         width: 250px;
         height: 250px;
-        object-fit: cover;
     }
 
     .card__content {
-        padding: 20px 15px 20px 15px;
+        padding: 20px 15px;
     }
 
     .card__title {
@@ -68,25 +67,13 @@
 }
 
 @media screen and (max-width: 728px) {
-    .card {
+    .card,
+    .card__image {
         width: 282px;
     }
 
     .card__image {
-        width: 282px;
         height: 282px;
-        object-fit: cover;
-    }
-}
-
-@media screen and (max-width: 425px) {
-    .card {
-        width: 282px;
-    }
-    .card__image {
-        width: 282px;
-        height: 282px;
-        object-fit: cover;
     }
 }
     
