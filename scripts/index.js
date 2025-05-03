@@ -18,6 +18,12 @@ const newCardForm = newCardPopup.querySelector('.popup__form');
 const cardTitleInput = newCardForm.querySelector('.popup__input_type_card-title');
 const cardUrlInput = newCardForm.querySelector('.popup__input_type_card-url');
 
+// Popup de imagen
+const imagePopup = document.querySelector('.popup_type_image');
+const imagePopupCloseButton = imagePopup.querySelector('.popup__close-button');
+const popupImage = imagePopup.querySelector('.popup__image');
+const popupCaption = imagePopup.querySelector('.popup__caption');
+
 const initialCards = [
     {
         name: 'Las Vegas',
@@ -97,6 +103,13 @@ function createCard(data) {
     cardImage.alt = data.name;
     cardTitle.textContent = data.name;
 
+    cardImage.addEventListener('click', () => {
+        popupImage.src = data.link;
+        popupImage.alt = data.name;
+        popupCaption.textContent = data.name;
+        openPopup(imagePopup);
+    });
+
     likeButton.addEventListener('click', () => {
         likeButton.classList.toggle('card__like-button_active');
     });
@@ -124,5 +137,7 @@ profileForm.addEventListener('submit', handleProfileFormSubmit);
 profileAddButton.addEventListener('click', openNewCardPopup);
 newCardCloseButton.addEventListener('click', () => closePopup(newCardPopup));
 newCardForm.addEventListener('submit', handleNewCardFormSubmit);
+
+imagePopupCloseButton.addEventListener('click', () => closePopup(imagePopup));
 
 renderCards();
