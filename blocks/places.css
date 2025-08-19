@@ -1,0 +1,50 @@
+.places {
+    max-width: 880px;
+    margin: 0 auto;
+}
+
+.places__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 21px 17px;
+    width: 100%;
+}
+
+
+@media screen and (max-width: 880px) {
+    .places {
+        max-width: 700px;
+    }
+
+    .places__list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 17px;
+        justify-content: center;
+        justify-items: center;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .places {
+        max-width: 600px;
+    }
+
+    .places__list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 21px 17px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .card {
+        width: 100%;
+        max-width: 282px;
+        justify-self: center;
+    }
+    .places__list {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
