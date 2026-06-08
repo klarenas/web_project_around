@@ -28,51 +28,6 @@ const cardTitleInput = newCardForm.querySelector(
 );
 const cardUrlInput = newCardForm.querySelector(".popup__input_type_card-url");
 
-// Las instancias de popup se crean más abajo usando las nuevas clases
-const initialCards = [];
-/*const initialCards = [
-  {
-    name: "Las Vegas",
-    link: "./images/Las vegas.avif",
-  },
-  {
-    name: "Las Vegas",
-    link: "./images/Las vegas.avif",
-  },
-  {
-    name: "Miami Vista al Mar ",
-    link: "./images/vista_al_mar_miami.avif",
-  },
-  {
-    name: "Puerto Rico Fuerte",
-    link: "./images/fuerte_puerto_rico.avif",
-  },
-  {
-    name: "Nueva York Iglesia San Patricio",
-    link: "./images/iglesia_san_patricio_ny.jpeg",
-  },
-  {
-    name: "Washington Obelisco",
-    link: "./images/obelisco_whashington.avif",
-  },
-  {
-    name: "Nueva York Rascacielos",
-    link: "./images/rascacielos_ny.jpeg",
-  },
-];*/
-api
-
-  .getCards()
-
-  .then((cards) => {
-    //initialCards.push(...cards);
-    cardSection.renderfromApi(cards);
-    console.log(initialCards);
-  })
-
-  .catch((err) => {
-    console.log(err);
-  });
 // Crear instancia de UserInfo
 const userInfo = new UserInfo({
   nameSelector: ".profile__name",
@@ -85,22 +40,55 @@ imagePopup.setEventListeners();
 
 // Crear instancias de PopupWithForm para los formularios
 const profilePopupInstance = new PopupWithForm(".popup", (formData) => {
-  userInfo.setUserInfo({ name: formData.name, job: formData.about });
+  api
+    .setUserInfo({ name: formData.name, about: formData.about })
+    .then((updatedUserData) => {
+      userInfo.setUserInfo({
+        name: updatedUserData.name,
+        job: updatedUserData.about,
+      });
+      profilePopupInstance.close();
+    })
+    .catch((err) => {
+      console.log("Error al actualizar perfil:", err);
+    });
 });
 profilePopupInstance.setEventListeners();
 
 const newCardPopupInstance = new PopupWithForm(
   ".popup_type_new-card",
   (formData) => {
-    const newCard = {
+    const newCardData = {
       name: formData["title"],
       link: formData["url"],
     };
-    const card = new Card(newCard, "#card-template", (imageUrl, caption) => {
-      imagePopup.open(imageUrl, caption);
-    });
-    const cardElement = card.generateCard();
-    cardSection.prependItem(cardElement);
+    api
+      .addCard(newCardData)
+      .then((cardData) => {
+        console.log("Tarjeta creada desde API:", cardData);
+        const card = new Card(
+          cardData,
+          "#card-template",
+          (imageUrl, caption) => {
+            imagePopup.open(imageUrl, caption);
+          },
+          (cardId, cardElement) => {
+            api
+              .deleteCard(cardId)
+              .then(() => {
+                cardElement.remove();
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          },
+        );
+        const cardElement = card.generateCard();
+        cardSection.prependItem(cardElement);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 );
 newCardPopupInstance.setEventListeners();
@@ -108,16 +96,52 @@ newCardPopupInstance.setEventListeners();
 // Crear la sección de tarjetas usando la clase Section
 const cardSection = new Section(
   {
-    items: initialCards,
+    items: [],
     renderer: (cardData) => {
-      const card = new Card(cardData, "#card-template", (imageUrl, caption) => {
-        imagePopup.open(imageUrl, caption);
-      });
+      const card = new Card(
+        cardData,
+        "#card-template",
+        (imageUrl, caption) => {
+          imagePopup.open(imageUrl, caption);
+        },
+        (cardId, cardElement) => {
+          api
+            .deleteCard(cardId)
+            .then(() => {
+              cardElement.remove();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        },
+      );
       return card.generateCard();
     },
   },
   ".places__list",
 );
+
+// Cargar perfil y tarjetas desde la API
+api
+  .getUserInfo()
+  .then((userData) => {
+    userInfo.setUserInfo({
+      name: userData.name,
+      job: userData.about,
+    });
+  })
+  .catch((err) => {
+    console.log("Error al cargar perfil:", err);
+  });
+
+api
+  .getCards()
+  .then((cards) => {
+    cardSection.renderfromApi(cards);
+  })
+  .catch((err) => {
+    console.log("Error al cargar tarjetas:", err);
+  });
 
 // Funciones para abrir popups
 function openProfilePopup() {
@@ -134,9 +158,6 @@ function openNewCardPopup() {
 // Event listeners para botones
 profileEditButton.addEventListener("click", openProfilePopup);
 profileAddButton.addEventListener("click", openNewCardPopup);
-
-// Renderizar tarjetas iniciales
-cardSection.renderItems();
 
 // Configuración para validación de formularios
 const validationConfig = {
