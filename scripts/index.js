@@ -38,6 +38,31 @@ const userInfo = new UserInfo({
 const imagePopup = new PopupWithImage(".popup_type_image");
 imagePopup.setEventListeners();
 
+function createCard(cardData) {
+  const card = new Card(
+    cardData,
+    "#card-template",
+    (imageUrl, caption) => {
+      imagePopup.open(imageUrl, caption);
+    },
+    (cardId, cardElement) => {
+      api
+        .deleteCard(cardId)
+        .then(() => {
+          cardElement.remove();
+        })
+        .catch((err) => {
+          console.log("Error al eliminar tarjeta:", err);
+        });
+    },
+    (cardId, isLiked) => {
+      return api.changeCardLike(cardId, isLiked);
+    },
+  );
+
+  return card.generateCard();
+}
+
 // Crear instancias de PopupWithForm para los formularios
 const profilePopupInstance = new PopupWithForm(".popup", (formData) => {
   api
@@ -65,26 +90,7 @@ const newCardPopupInstance = new PopupWithForm(
     api
       .addCard(newCardData)
       .then((cardData) => {
-        console.log("Tarjeta creada desde API:", cardData);
-        const card = new Card(
-          cardData,
-          "#card-template",
-          (imageUrl, caption) => {
-            imagePopup.open(imageUrl, caption);
-          },
-          (cardId, cardElement) => {
-            api
-              .deleteCard(cardId)
-              .then(() => {
-                cardElement.remove();
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          },
-        );
-        const cardElement = card.generateCard();
-        cardSection.prependItem(cardElement);
+        cardSection.prependItem(createCard(cardData));
       })
       .catch((err) => {
         console.log(err);
@@ -98,24 +104,7 @@ const cardSection = new Section(
   {
     items: [],
     renderer: (cardData) => {
-      const card = new Card(
-        cardData,
-        "#card-template",
-        (imageUrl, caption) => {
-          imagePopup.open(imageUrl, caption);
-        },
-        (cardId, cardElement) => {
-          api
-            .deleteCard(cardId)
-            .then(() => {
-              cardElement.remove();
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        },
-      );
-      return card.generateCard();
+      return createCard(cardData);
     },
   },
   ".places__list",

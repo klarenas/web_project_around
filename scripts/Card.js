@@ -1,13 +1,21 @@
 // Ya no necesitamos importar PopupWithImage porque recibimos handleCardClick como callback
 
 export default class Card {
-  constructor(data, templateSelector, handleCardClick, handleCardDelete) {
+  constructor(
+    data,
+    templateSelector,
+    handleCardClick,
+    handleCardDelete,
+    handleCardLike,
+  ) {
     this._name = data.name;
     this._link = data.link;
     this._id = data._id;
+    this._isLiked = Boolean(data.isLiked);
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
     this._handleCardDelete = handleCardDelete;
+    this._handleCardLike = handleCardLike;
   }
 
   _getTemplate() {
@@ -29,7 +37,19 @@ export default class Card {
   }
 
   _handleLikeClick() {
-    this._likeButton.classList.toggle("card__like-button_active");
+    const newIsLiked = !this._isLiked;
+
+    this._handleCardLike(this._id, newIsLiked)
+      .then(() => {
+        this._isLiked = newIsLiked;
+        this._likeButton.classList.toggle(
+          "card__like-button_active",
+          this._isLiked,
+        );
+      })
+      .catch((err) => {
+        console.log("Error al cambiar like:", err);
+      });
   }
 
   _handleDeleteClick() {
@@ -46,6 +66,10 @@ export default class Card {
     this._cardImage.src = this._link;
     this._cardImage.alt = this._name;
     this._cardTitle.textContent = this._name;
+
+    if (this._isLiked) {
+      this._likeButton.classList.add("card__like-button_active");
+    }
 
     this._setEventListeners();
 
