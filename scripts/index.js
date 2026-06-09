@@ -4,8 +4,12 @@ import Section from "./Section.js";
 import Popup from "./Popup.js";
 import PopupWithImage from "./PopupWithImage.js";
 import PopupWithForm from "./PopupWithForm.js";
+import PopupWithConfirmation from "./PopupWithConfirmation.js";
 import UserInfo from "./UserInfo.js";
 import { api } from "./api.js";
+
+let cardIdToDelete = null;
+let cardElementToDelete = null;
 
 const profileEditButton = document.querySelector(".profile__edit-button");
 const profileAddButton = document.querySelector(".profile__add-button");
@@ -38,6 +42,22 @@ const userInfo = new UserInfo({
 const imagePopup = new PopupWithImage(".popup_type_image");
 imagePopup.setEventListeners();
 
+const deleteCardPopup = new PopupWithConfirmation(
+  ".popup_type_delete-card",
+  () => {
+    api
+      .deleteCard(cardIdToDelete)
+      .then(() => {
+        cardElementToDelete.remove();
+        deleteCardPopup.close();
+      })
+      .catch((err) => {
+        console.log("Error al eliminar tarjeta:", err);
+      });
+  },
+);
+deleteCardPopup.setEventListeners();
+
 function createCard(cardData) {
   const card = new Card(
     cardData,
@@ -46,14 +66,9 @@ function createCard(cardData) {
       imagePopup.open(imageUrl, caption);
     },
     (cardId, cardElement) => {
-      api
-        .deleteCard(cardId)
-        .then(() => {
-          cardElement.remove();
-        })
-        .catch((err) => {
-          console.log("Error al eliminar tarjeta:", err);
-        });
+      cardIdToDelete = cardId;
+      cardElementToDelete = cardElement;
+      deleteCardPopup.open();
     },
     (cardId, isLiked) => {
       return api.changeCardLike(cardId, isLiked);
