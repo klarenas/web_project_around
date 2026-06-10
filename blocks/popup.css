@@ -75,6 +75,7 @@
 }
 
 .popup__button {
+  width: 100%;
   background: #000;
   border-radius: 2px;
   color: #fff;
@@ -149,10 +150,6 @@
 .popup__title_type_delete-card {
   margin: 0 0 38px;
   text-align: center;
-}
-
-.popup__button_type_confirm {
-  width: 100%;
 }
 
 @media screen and (max-width: 614px) {

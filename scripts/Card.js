@@ -11,6 +11,7 @@ export default class Card {
     this._name = data.name;
     this._link = data.link;
     this._id = data._id;
+    this._isOwner = data.owner;
     this._isLiked = Boolean(data.isLiked);
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
@@ -69,6 +70,10 @@ export default class Card {
 
     if (this._isLiked) {
       this._likeButton.classList.add("card__like-button_active");
+    }
+
+    if (this._isOwner === false) {
+      this._deleteButton.remove();
     }
 
     this._setEventListeners();

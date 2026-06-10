@@ -1,40 +1,49 @@
 import Popup from "./Popup.js";
 
 export default class PopupWithForm extends Popup {
-    constructor(popupSelector, handleFormSubmit) {
-        super(popupSelector);
-        this._handleFormSubmit = handleFormSubmit;
-        this._form = this._popup.querySelector('.popup__form');
-        this._inputList = this._popup.querySelectorAll('.popup__input');
-    }
+  constructor(popupSelector, handleFormSubmit, loadingText = "Guardando...") {
+    super(popupSelector);
+    this._handleFormSubmit = handleFormSubmit;
+    this._form = this._popup.querySelector(".popup__form");
+    this._inputList = this._popup.querySelectorAll(".popup__input");
+    this._submitButton = this._popup.querySelector(".popup__button");
+    this._defaultButtonText = this._submitButton.textContent;
+    this._loadingText = loadingText;
+  }
 
-    // Método privado que recopila datos de todos los campos de entrada
-    _getInputValues() {
-        const formValues = {};
-        this._inputList.forEach(input => {
-            formValues[input.name] = input.value;
-        });
-        return formValues;
-    }
+  _getInputValues() {
+    const formValues = {};
+    this._inputList.forEach((input) => {
+      formValues[input.name] = input.value;
+    });
+    return formValues;
+  }
 
-    // Modifica el método padre setEventListeners()
-    setEventListeners() {
-        // Llamar al método padre para mantener funcionalidad de cerrar
-        super.setEventListeners();
-        
-        // Agregar detector de eventos submit al formulario
-        this._form.addEventListener('submit', (evt) => {
-            evt.preventDefault();
-            // Llamar al callback con los valores del formulario
-            this._handleFormSubmit(this._getInputValues());
-        });
+  renderLoading(isLoading) {
+    if (isLoading) {
+      this._submitButton.textContent = this._loadingText;
+      this._submitButton.disabled = true;
+      this._submitButton.classList.remove("popup__button_disabled");
+    } else {
+      this._submitButton.textContent = this._defaultButtonText;
+      this._submitButton.disabled = false;
     }
+  }
 
-    // Modifica el método padre close() para reiniciar el formulario
-    close() {
-        // Llamar al método padre
-        super.close();
-        // Reiniciar el formulario
-        this._form.reset();
-    }
+  setEventListeners() {
+    super.setEventListeners();
+
+    this._form.addEventListener("submit", (evt) => {
+      evt.preventDefault();
+      this._handleFormSubmit(this._getInputValues());
+    });
+  }
+
+  close() {
+    super.close();
+    this._form.reset();
+    this._submitButton.textContent = this._defaultButtonText;
+    this._submitButton.classList.add("popup__button_disabled");
+    this._submitButton.disabled = true;
+  }
 }
