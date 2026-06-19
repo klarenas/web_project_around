@@ -7,11 +7,12 @@ export default class Card {
     handleCardClick,
     handleCardDelete,
     handleCardLike,
+    userId,
   ) {
     this._name = data.name;
     this._link = data.link;
     this._id = data._id;
-    this._isOwner = data.owner;
+    this._isOwner = data.owner === userId;
     this._isLiked = Boolean(data.isLiked);
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;

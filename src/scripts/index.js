@@ -10,6 +10,7 @@ import { api } from "./api.js";
 
 let cardIdToDelete = null;
 let cardElementToDelete = null;
+let currentUserId = null;
 
 const profileEditButton = document.querySelector(".profile__edit-button");
 const profileAvatarEditButton = document.querySelector(
@@ -67,7 +68,7 @@ const deleteCardPopup = new PopupWithConfirmation(
 );
 deleteCardPopup.setEventListeners();
 
-function createCard(cardData) {
+function createCard(cardData, userId) {
   const card = new Card(
     cardData,
     "#card-template",
@@ -82,6 +83,7 @@ function createCard(cardData) {
     (cardId, isLiked) => {
       return api.changeCardLike(cardId, isLiked);
     },
+    userId,
   );
 
   return card.generateCard();
@@ -135,7 +137,7 @@ const newCardPopupInstance = new PopupWithForm(
     api
       .addCard(newCardData)
       .then((cardData) => {
-        cardSection.prependItem(createCard(cardData));
+        cardSection.prependItem(createCard(cardData, currentUserId));
         newCardPopupInstance.close();
       })
       .catch((err) => {
@@ -152,33 +154,27 @@ const cardSection = new Section(
   {
     items: [],
     renderer: (cardData) => {
-      return createCard(cardData);
+      return createCard(cardData, currentUserId);
     },
   },
   ".places__list",
 );
 
 // Cargar perfil y tarjetas desde la API
-api
-  .getUserInfo()
-  .then((userData) => {
+Promise.all([api.getUserInfo(), api.getCards()])
+  .then(([userData, cards]) => {
+    currentUserId = userData._id;
     userInfo.setUserInfo({
       name: userData.name,
       job: userData.about,
       avatar: userData.avatar,
     });
+    cards.forEach((cardData) => {
+      cardSection.addItem(createCard(cardData, currentUserId));
+    });
   })
   .catch((err) => {
-    console.log("Error al cargar perfil:", err);
-  });
-
-api
-  .getCards()
-  .then((cards) => {
-    cardSection.renderfromApi(cards);
-  })
-  .catch((err) => {
-    console.log("Error al cargar tarjetas:", err);
+    console.log("Error al cargar datos:", err);
   });
 
 // Funciones para abrir popups
