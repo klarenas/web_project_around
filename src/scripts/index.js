@@ -1,7 +1,6 @@
 import Card from "./Card.js";
 import FormValidator from "./FormValidator.js";
 import Section from "./Section.js";
-import Popup from "./Popup.js";
 import PopupWithImage from "./PopupWithImage.js";
 import PopupWithForm from "./PopupWithForm.js";
 import PopupWithConfirmation from "./PopupWithConfirmation.js";
@@ -17,12 +16,9 @@ const profileAvatarEditButton = document.querySelector(
   ".profile__avatar-edit-button",
 );
 const profileAddButton = document.querySelector(".profile__add-button");
-const profileName = document.querySelector(".profile__name");
-const profileAbout = document.querySelector(".profile__about");
 
 // Popup de edición de perfil
 const profilePopup = document.querySelector(".popup");
-const profileCloseButton = profilePopup.querySelector(".popup__close-button");
 const profileForm = profilePopup.querySelector(".popup__form");
 const nameInput = profileForm.querySelector(".popup__input_type_name");
 const aboutInput = profileForm.querySelector(".popup__input_type_about");
@@ -34,12 +30,7 @@ const avatarInput = avatarForm.querySelector(".popup__input_type_avatar");
 
 // Popup de nueva tarjeta
 const newCardPopup = document.querySelector(".popup_type_new-card");
-const newCardCloseButton = newCardPopup.querySelector(".popup__close-button");
 const newCardForm = newCardPopup.querySelector(".popup__form");
-const cardTitleInput = newCardForm.querySelector(
-  ".popup__input_type_card-title",
-);
-const cardUrlInput = newCardForm.querySelector(".popup__input_type_card-url");
 
 // Crear instancia de UserInfo
 const userInfo = new UserInfo({
@@ -211,9 +202,12 @@ const validationConfig = {
 // Instancias de FormValidator para cada formulario
 const profileFormValidator = new FormValidator(validationConfig, profileForm);
 profileFormValidator.enableValidation();
+profilePopupInstance._formValidator = profileFormValidator;
 
 const newCardFormValidator = new FormValidator(validationConfig, newCardForm);
 newCardFormValidator.enableValidation();
+newCardPopupInstance._formValidator = newCardFormValidator;
 
 const avatarFormValidator = new FormValidator(validationConfig, avatarForm);
 avatarFormValidator.enableValidation();
+avatarPopupInstance._formValidator = avatarFormValidator;

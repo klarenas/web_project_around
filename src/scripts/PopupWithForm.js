@@ -9,6 +9,7 @@ export default class PopupWithForm extends Popup {
     this._submitButton = this._popup.querySelector(".popup__button");
     this._defaultButtonText = this._submitButton.textContent;
     this._loadingText = loadingText;
+    this._formValidator = null;
   }
 
   _getInputValues() {
@@ -45,5 +46,8 @@ export default class PopupWithForm extends Popup {
     this._submitButton.textContent = this._defaultButtonText;
     this._submitButton.classList.add("popup__button_disabled");
     this._submitButton.disabled = true;
+    if (this._formValidator) {
+      this._formValidator.resetValidation();
+    }
   }
 }
